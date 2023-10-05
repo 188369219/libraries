@@ -1,0 +1,67 @@
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
+
+android {
+    namespace 'top.ienjoy.cybergarage'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 23
+        aarMetadata {
+            minCompileSdk = 33
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    publishing {
+        singleVariant("release")
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'top.ienjoy'
+                artifactId = 'cybergarage'
+                version = '2.1.5'
+
+                pom {
+                    name = 'cybergarage-upnp core'
+                    description = 'A pure Java open source implementation of UPnP specifications'
+                    licenses {
+                        license {
+                            name = 'BSD-3-Clause license'
+                            url = 'https://github.com/cybergarage/cybergarage-upnp/blob/master/LICENSE.txt'
+                            distribution = 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            name = 'The Android Open Source Project'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:https://github.com/androidx/media.git'
+                        url = 'https://github.com/androidx/media'
+                    }
+                }
+            }
+        }
+    }
+}
+

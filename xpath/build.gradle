@@ -1,0 +1,79 @@
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
+
+android {
+    namespace 'top.ienjoy.xpath'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        aarMetadata {
+            minCompileSdk = 33
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled = true
+    }
+
+    publishing {
+        singleVariant("release")
+    }
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    api("top.ienjoy:jsoup:1.16.1")
+    api("org.apache.commons:commons-lang3:3.13.0")
+    // noinspection GradleDependency
+    api("org.antlr:antlr4-runtime:4.7.2")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'top.ienjoy'
+                artifactId = 'xpath'
+                version = '2.5.3'
+
+                pom {
+                    name = 'JsoupXpath'
+                    url = 'https://github.com/zhegexiaohuozi/JsoupXpath'
+                    description = '一个非常好用而且强大的基于xpath的html解析器。html的DOM树生成依赖Jsoup。Lexer 和 Parser基于Antlr4,支持完备的W3C XPATH 1.0标准语法，W3C规范：http://www.w3.org/TR/1999/REC-xpath-19991116。'
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution = 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'wanghaomiao.cn'
+                            name = 'Haomiao Wang'
+                            email = 'seimimaster@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git@github.com:zhegexiaohuozi/JsoupXpath.git'
+                        url = 'git@github.com:zhegexiaohuozi/JsoupXpath.git'
+                        developerConnection = 'scm:git:git@github.com:zhegexiaohuozi/JsoupXpath.git'
+                    }
+                }
+            }
+        }
+    }
+}

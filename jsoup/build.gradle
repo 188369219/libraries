@@ -1,0 +1,75 @@
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
+
+android {
+    namespace 'top.ienjoy.jsoup'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        aarMetadata {
+            minCompileSdk = 33
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled = true
+    }
+
+    publishing {
+        singleVariant("release")
+    }
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    api("com.google.code.findbugs:jsr305:3.0.2")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'top.ienjoy'
+                artifactId = 'jsoup'
+                version = '1.16.1'
+
+                pom {
+                    name = 'jsoup Java HTML Parser'
+                    description = 'jsoup is a Java library for working with real-world HTML. It provides a very convenient API for fetching URLs and extracting and manipulating data, using the best of HTML5 DOM methods and CSS selectors. jsoup implements the WHATWG HTML5 specification, and parses HTML to the same DOM as modern browsers do.'
+                    licenses {
+                        license {
+                            name = 'The MIT License'
+                            url = 'https://jsoup.org/license'
+                            distribution = 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'jhy'
+                            name = 'Jonathan Hedley'
+                            email = 'jonathan@hedley.net'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:https://github.com/jhy/jsoup.git'
+                        url = 'https://github.com/jhy/jsoup'
+                    }
+                }
+            }
+        }
+    }
+}
