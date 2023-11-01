@@ -45,7 +45,7 @@ afterEvaluate {
 
                 groupId = 'top.ienjoy'
                 artifactId = 'jsoup'
-                version = '1.16.1'
+                version = '1.16.2'
 
                 pom {
                     name = 'jsoup Java HTML Parser'

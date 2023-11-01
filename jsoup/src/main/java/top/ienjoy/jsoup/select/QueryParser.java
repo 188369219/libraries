@@ -139,18 +139,21 @@ public class QueryParser {
 
     private String consumeSubQuery() {
         StringBuilder sq = StringUtil.borrowBuilder();
+        boolean seenNonCombinator = false; // eat until we hit a combinator after eating something else
         while (!tq.isEmpty()) {
             if (tq.matches("("))
                 sq.append("(").append(tq.chompBalanced('(', ')')).append(")");
             else if (tq.matches("["))
                 sq.append("[").append(tq.chompBalanced('[', ']')).append("]");
             else if (tq.matchesAny(Combinators))
-                if (sq.length() > 0)
+                if (seenNonCombinator)
                     break;
                 else
-                    tq.consume();
-            else
+                    sq.append(tq.consume());
+            else {
+                seenNonCombinator = true;
                 sq.append(tq.consume());
+            }
         }
         return StringUtil.releaseBuilder(sq);
     }
@@ -179,6 +182,7 @@ public class QueryParser {
             case "gt" -> new Evaluator.IndexGreaterThan(consumeIndex());
             case "eq" -> new Evaluator.IndexEquals(consumeIndex());
             case "has" -> has();
+            case "is" -> is();
             case "contains" -> contains(false);
             case "containsOwn" -> contains(true);
             case "containsWholeText" -> containsWholeText(false);
@@ -329,6 +333,13 @@ public class QueryParser {
         String subQuery = consumeParens();
         Validate.notEmpty(subQuery, ":has(selector) sub-select must not be empty");
         return new StructuralEvaluator.Has(parse(subQuery));
+    }
+
+    // pseudo selector :is()
+    private Evaluator is() {
+        String subQuery = consumeParens();
+        Validate.notEmpty(subQuery, ":is(selector) sub-select must not be empty");
+        return new StructuralEvaluator.Is(parse(subQuery));
     }
 
     // pseudo selector :contains(text), containsOwn(text)

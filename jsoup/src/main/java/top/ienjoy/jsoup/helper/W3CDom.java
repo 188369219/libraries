@@ -206,8 +206,12 @@ public class W3CDom {
             top.ienjoy.jsoup.nodes.Document inDoc = in.ownerDocument();
             top.ienjoy.jsoup.nodes.DocumentType doctype = inDoc != null ? inDoc.documentType() : null;
             if (doctype != null) {
-                org.w3c.dom.DocumentType documentType = impl.createDocumentType(doctype.name(), doctype.publicId(), doctype.systemId());
-                out.appendChild(documentType);
+                try {
+                    org.w3c.dom.DocumentType documentType = impl.createDocumentType(doctype.name(), doctype.publicId(), doctype.systemId());
+                    out.appendChild(documentType);
+                } catch (DOMException ignored) {
+                    // invalid / empty doctype dropped
+                }
             }
             out.setXmlStandalone(true);
             // if in is Document, use the root element, not the wrapping document, as the context:

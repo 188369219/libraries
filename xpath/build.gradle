@@ -33,7 +33,7 @@ android {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
-    api("top.ienjoy:jsoup:1.16.1")
+    api("top.ienjoy:jsoup:1.16.2")
     api("org.apache.commons:commons-lang3:3.13.0")
     // noinspection GradleDependency
     api("org.antlr:antlr4-runtime:4.7.2")
